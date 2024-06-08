@@ -1,0 +1,12 @@
+.aboutdiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8vmax 0;
+}
+
+.aboutdiv p{
+    text-align: center;
+    width: 60%;
+    font-size: 1.2rem;
+}
