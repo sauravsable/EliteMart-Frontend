@@ -114,7 +114,10 @@
     }
     .updateProfileBox {
       width: 100vw;
-      height: 95vh;
+      height: 80vh;
+    }
+    .updateProfileHeading {
+      font-size: 3.3vmax;
     }
   
     .updateProfileForm {

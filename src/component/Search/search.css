@@ -38,19 +38,18 @@
   
   @media screen and (max-width: 600px) {
     .searchBox {
-      padding-right: 0;
+      padding: 0;
     }
     
     .searchBox > input[type="text"] {
       width: 100%;
       font: 300 4vw cursive;
-      height: 10%;
+      padding: 1vmax 2vmax;
     }
   
     .searchBox > input[type="submit"] {
-      height: 10%;
       width: 30%;
       font: 300 4vw "Roboto";
-      padding: 0.9vmax;
+      padding: 1.3vmax;
     }
   }

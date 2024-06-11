@@ -39,3 +39,9 @@
 .breadcrumbs ul li a:hover {
     color: #14bdee;
 }
+
+@media screen and (max-width:600px) {
+    .home {
+        margin-top: 74px;
+    }
+}

@@ -15,7 +15,7 @@
   .LoginSignUpBox {
     background-color: white;
     width: 25vw;
-    height: 60vh;
+    height: 65vh;
     box-sizing: border-box;
     overflow: hidden;
   }
@@ -167,7 +167,7 @@
     }
     .LoginSignUpBox {
       width: 100vw;
-      height: 95vh;
+      height: 70vh;
     }
     .login_signUp_toggle {
       height: 5vmax;

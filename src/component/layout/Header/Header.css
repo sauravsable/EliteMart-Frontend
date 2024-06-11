@@ -112,4 +112,8 @@
         width: 50%;
     }
 
+    .carticondiv{
+        display: none;
+    }
+
 }
