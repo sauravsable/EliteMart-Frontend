@@ -90,7 +90,7 @@ export const createProduct = (productData)=> async(dispatch)=>{
             type : NEW_PRODUCT_REQUEST
         });
 
-        const config = {header : {"Content-Type":"application/json"}, withCredentials: true}
+        const config = {header : {"Content-Type":"multipart/form-data"}, withCredentials: true}
 
         const {data} = await axios.post(`${APIURL}/admin/product/new`,productData,config);
         

@@ -70,12 +70,12 @@ export default function LoginSignup({location}) {
       const registerDataChange = (e) => {
         if (e.target.name === 'avatar') {
             const file = e.target.files[0];
+            setAvatar(file)
             const reader = new FileReader();
 
             reader.onload = () => {
                 if (reader.readyState === 2) {
                     setAvatarPreview(reader.result);
-                    setAvatar(reader.result);
                 }
             };
 
@@ -94,7 +94,7 @@ export default function LoginSignup({location}) {
 
         if(isAuthenticated){
           console.log("isAuthenticate in login",isAuthenticated);
-              navigate("/account")  
+          navigate("/account")  
         }
       },[alert,dispatch,error,isAuthenticated,navigate,shipping]);
 

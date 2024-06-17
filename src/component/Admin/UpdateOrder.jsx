@@ -1,4 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
+import "./updateOrder.css";
+import './newProduct.css'
 import MetaData from "../layout/MetaData/MetaData";
 import { Link } from "react-router-dom";
 import { Typography } from "@material-ui/core";
@@ -14,7 +16,7 @@ import { useAlert } from "react-alert";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import { Button } from "@material-ui/core";
 import { UPDATE_ORDER_RESET } from "../../constants/orderConstants";
-import "./updateOrder.css";
+
 import { useParams } from "react-router-dom";
 
 const UpdateOrder = () => {
@@ -66,7 +68,7 @@ const UpdateOrder = () => {
             <div
               className="confirmOrderPage"
               style={{
-                display: order.orderStatus === "Delivered" ? "block" : "grid",
+                display: order && order.orderStatus === "Delivered" ? "block" : "grid",
               }}
             >
               <div>

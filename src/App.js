@@ -68,8 +68,9 @@ function App() {
         families: ["Roboto", "Droid Sans", "Chilanka"],
       },
     });
+
+      dispatch(loadUser());
  
-    dispatch(loadUser());
 
     if(isAuthenticated===true){
       getStripeApiKey();

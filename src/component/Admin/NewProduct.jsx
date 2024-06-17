@@ -65,7 +65,7 @@ const NewProduct = () => {
     myForm.set("Stock", Stock);
 
     images.forEach((image) => {
-      myForm.append("images", image);
+      myForm.append('images', image);
     });
     
     dispatch(createProduct(myForm));
@@ -78,12 +78,13 @@ const NewProduct = () => {
     setImagesPreview([]);
 
     files.forEach((file) => {
+      setImages((old) => [...old,file ]);
       const reader = new FileReader();
 
       reader.onload = () => {
         if (reader.readyState === 2) {
           setImagesPreview((old) => [...old, reader.result]);
-          setImages((old) => [...old, reader.result]);
+         
         }
       };
 

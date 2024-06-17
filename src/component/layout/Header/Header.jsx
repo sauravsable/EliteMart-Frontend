@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { FaRegUser } from "react-icons/fa";
+// import { FaRegUser } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import "./Header.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserOptions from "../UserOptions/UserOptions";
 import Search from "../../Search/Search";
+// import logo from '../../../images/logo (2).png'
 export default function Header() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { cartItems } = useSelector(state => state.cart);
@@ -60,8 +61,8 @@ export default function Header() {
             <UserOptions user={user} />
           ) : (
             <Link className="ms-3" to="/login" style={{color:"white"}}>
-              <FaRegUser />
-              {/* Login */}
+              {/* <FaRegUser /> */}
+              Login
             </Link>
           )}
         </div>
@@ -70,7 +71,7 @@ export default function Header() {
       <div className="navbarcontainer">
         <div className="col-xl-6 col-4">
           {/* <img className='logoimg' src={logo} alt="logo" /> */}
-          <h2 className="logoimg">EliteMart</h2>
+          <Link to="/" className="logoimg">EliteMart</Link>
         </div>
 
         <div className="nav-elements d-flex col-xl-6 col-8">

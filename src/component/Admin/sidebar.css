@@ -22,7 +22,7 @@
   }
   .sidebar a:hover {
     color: tomato;
-    transform: scale(1.1);
+    transform: scale(1.1) !important;
   }
   
   .sidebar a > P {

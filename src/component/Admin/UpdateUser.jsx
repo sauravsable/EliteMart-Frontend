@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import './newProduct.css';
 import { useSelector, useDispatch } from "react-redux";
 import { useAlert } from "react-alert";
 import { Button } from "@material-ui/core";
@@ -16,6 +17,7 @@ import {
 import Loader from "../layout/Loader/Loader";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
 
 const UpdateUser = () => {
   const dispatch = useDispatch();
