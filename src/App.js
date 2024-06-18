@@ -18,6 +18,7 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import Loader from './component/layout/Loader/Loader.jsx';
 import ProductShimmer from './component/Shimmer/ProductShimmer.jsx';
+import MobileViewHeader from './component/layout/MobileViewHeader/MobileViewHeader.jsx';
 
 
 const Cart = lazy(()=> import("./component/Cart/Cart.jsx"));
@@ -146,7 +147,9 @@ function App() {
           )}
 
         </Routes>
+       
         <Footer/>
+        <MobileViewHeader/>
     </Router>
   
   );

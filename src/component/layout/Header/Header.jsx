@@ -76,7 +76,7 @@ export default function Header() {
 
         <div className="nav-elements d-flex col-xl-6 col-8">
           <Search />
-          <div className="carticondiv">
+          <div className="carticondiv carticondiv1">
             <Link className="cartlink text-body ms-3" to="/cart">
               <MdOutlineShoppingCart /><span>{cartItems.length}</span>
             </Link>
