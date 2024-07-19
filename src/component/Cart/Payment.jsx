@@ -19,6 +19,8 @@ import EventIcon from "@material-ui/icons/Event";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import { createOrder, clearErrors } from "../../actions/orderActions";
 import { useNavigate } from "react-router-dom";
+import APIURL from "../../API/Api";
+
 const Payment = () => {
   const navigate = useNavigate();
 
@@ -54,7 +56,7 @@ const Payment = () => {
 
     try {
       const config = {header : {"Content-Type":"application/json"},withCredentials: true} ;
-      const { data } = await axios.post("http://localhost:5000/api/v1/payment/process",paymentData,config);
+      const { data } = await axios.post(`${APIURL}/payment/process`,paymentData,config);
       console.log(data);
       const client_secret = data.client_secret;
 

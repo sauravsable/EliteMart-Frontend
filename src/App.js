@@ -20,6 +20,7 @@ import Loader from './component/layout/Loader/Loader.jsx';
 import ProductShimmer from './component/Shimmer/ProductShimmer.jsx';
 import MobileViewHeader from './component/layout/MobileViewHeader/MobileViewHeader.jsx';
 
+import Payment from './component/Cart/Payment';
 
 const Cart = lazy(()=> import("./component/Cart/Cart.jsx"));
 const About = lazy(()=> import("./component/About/About"));
@@ -35,7 +36,7 @@ const UpdatePassword =  lazy(()=> import('./component/User/UpdatePassword'));
 
 const Shipping = lazy(()=> import('./component/Cart/Shipping'));
 const ConfirmOrder = lazy(()=> import('./component/Cart/ConfirmOrder'));
-const Payment = lazy(()=> import('./component/Cart/Payment'));
+// const Payment = lazy(()=> import('./component/Cart/Payment'));
 const OrderSuccess = lazy(()=> import('./component/Cart/OrderSuccess'));
 const MyOrders = lazy(()=> import('./component/Order/MyOrders'));
 const OrderDetails = lazy(()=> import('./component/Order/OrderDetails'));
@@ -60,6 +61,8 @@ function App() {
     const config = {header : {"Content-Type":"application/json"},withCredentials: true};
 
     const {data} = await axios.get(`${APIURL}/stripeapikey`,config);
+
+    console.log("stripe data",data);
     setstripeApiKey(data.stripeApiKey);
   }
 
@@ -70,15 +73,19 @@ function App() {
       },
     });
 
-      dispatch(loadUser());
- 
+    dispatch(loadUser());
+    
+  }, [dispatch]);
 
-    if(isAuthenticated===true){
+  useEffect(() => {
+    if(isAuthenticated && isAuthenticated===true){
       getStripeApiKey();
-      console.log(setstripeApiKey);
+      console.log("function called");
     }
     
-  }, []);
+  }, [isAuthenticated]);
+
+  
 
   const ProtectedRoute = ({ element, isAdmin}) => {
 
@@ -142,8 +149,8 @@ function App() {
 
            <Route path={"/admin/reviews"} element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><ProductReviews/></Suspense>} isAdmin={true}/>}/>
           
-          {isAuthenticated && (
-          <Route exact path="/process/payment" element={<Elements stripe={loadStripe(stripeApiKey)}><Payment /></Elements>} />
+          {isAuthenticated  && isAuthenticated === true && stripeApiKey && (
+          <Route exact path={"/process/payment"} element={<Elements stripe={loadStripe(stripeApiKey)}><Payment /></Elements>} />
           )}
 
         </Routes>

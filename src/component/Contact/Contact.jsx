@@ -5,7 +5,7 @@ export default function Contact() {
   return (
     <>
     <Top title={"Contact"}/>
-    <MetaData title="Contact Us -- ECOMMERCE"/>
+    <MetaData title="Contact Us -- EliteMart"/>
      <div className="contact-us">
         <div className="container">
             <div className="row d-flex justify-content-center">

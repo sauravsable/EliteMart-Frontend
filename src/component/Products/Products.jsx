@@ -55,7 +55,7 @@ export default function Products() {
 
   return (
     <>
-      <MetaData title="PRODUCTS -- ECOMMERCE"/>
+      <MetaData title="Products -- EliteMart"/>
       <h2 className='productsHeading'>Products</h2>
       {
       loading ? 

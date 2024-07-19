@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment} from "react";
 import CheckoutSteps from "../Cart/CheckoutSteps";
 import { useSelector } from "react-redux";
 import MetaData from "../layout/MetaData/MetaData";
@@ -6,10 +6,11 @@ import "./confirmorder.css";
 import { Link } from "react-router-dom";
 import { Typography } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
+
 const ConfirmOrder = () => {
   const navigate =  useNavigate();
   const { shippingInfo, cartItems } = useSelector((state) => state.cart);
-  const { user } = useSelector((state) => state.user);
+  const { user} = useSelector((state) => state.user);
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.quantity * item.price,
