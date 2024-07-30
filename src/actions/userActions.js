@@ -36,7 +36,13 @@ import {
     USER_DETAILS_REQUEST,
     USER_DETAILS_SUCCESS,
     USER_DETAILS_FAIL,     
-    CLEAR_ERRORS  
+    CLEAR_ERRORS,  
+    CREATE_CART_REQUEST,
+    CREATE_CART_SUCCESS,
+    CREATE_CART_FAIL,
+    GET_CARTS_REQUEST,
+    GET_CARTS_SUCCESS,
+    GET_CARTS_FAIL
 } from "../constants/userConstants";
 import APIURL from '../API/Api';
 
@@ -303,8 +309,48 @@ export const getAllUsers = () => async (dispatch) => {
       });
     }
   };
-  
 
+// create cart
+export const createCart = ({cartname}) => async (dispatch) => {
+        try {
+        
+          dispatch({ type: CREATE_CART_REQUEST});
+      
+          const config = {header : {"Content-Type":"application/json"},withCredentials: true} 
+    
+          const { data } = await axios.post(`${APIURL}/create/cart`,{cartname},config);
+        
+          console.log(data);
+          dispatch({ type: CREATE_CART_SUCCESS, payload: data.success });
+        } catch (error) {
+          dispatch({
+            type: CREATE_CART_FAIL,
+            payload: error.response.data.message,
+          });
+        }
+};
+      
+  
+export const getCarts = () => async (dispatch) => {
+    try {
+    
+      dispatch({ type: GET_CARTS_REQUEST});
+  
+      const config = {header : {"Content-Type":"application/json"},withCredentials: true} 
+
+      const { data } = await axios.get(`${APIURL}/getcarts`,config);
+
+      console.log("carts",data);
+    
+      console.log(data);
+      dispatch({ type: GET_CARTS_SUCCESS, payload: data.carts });
+    } catch (error) {
+      dispatch({
+        type: GET_CARTS_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+};
 
 // clearing Errors
 export const clearErrors = ()=> async(dispatch)=>{

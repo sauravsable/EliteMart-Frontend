@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import MetaData from "../layout/MetaData/MetaData";
 
-const Cart = () => {
+const CartDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -53,6 +53,7 @@ const Cart = () => {
       ) : (
         <Fragment>
           <div className="cartPage">
+          <h2 className="homeheading">Cart Name</h2>
             <div className="cartHeader">
               <p>Product</p>
               <p>Quantity</p>
@@ -111,4 +112,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default CartDetails;

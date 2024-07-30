@@ -1,15 +1,21 @@
-import { useEffect } from "react";
-// import { FaRegUser } from "react-icons/fa";
+import { useEffect,useState } from "react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import "./Header.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserOptions from "../UserOptions/UserOptions";
 import Search from "../../Search/Search";
-// import logo from '../../../images/logo (2).png'
+import CartOptions from "../CartOptions/CartOptions";
+
 export default function Header() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { cartItems } = useSelector(state => state.cart);
+
+  const [open, setOpen] = useState(false);
+
+    const toggleDropdown = () => {
+    setOpen(!open);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,9 +83,21 @@ export default function Header() {
         <div className="nav-elements d-flex col-xl-6 col-8">
           <Search />
           <div className="carticondiv carticondiv1">
-            <Link className="cartlink text-body ms-3" to="/cart">
-              <MdOutlineShoppingCart /><span>{cartItems.length}</span>
-            </Link>
+            {
+              isAuthenticated && isAuthenticated === true ?(
+                <button className="cartlink text-body ms-3" style={{border:"none"}} onClick={toggleDropdown}>
+                <MdOutlineShoppingCart /><span>{cartItems.length}</span>
+              </button>
+              ):
+              (
+                <Link to="/cart" className="cartlink text-body ms-3">
+                <MdOutlineShoppingCart /><span>{cartItems.length}</span>
+              </Link>
+              )
+            }
+            {isAuthenticated && isAuthenticated === true &&
+             <CartOptions user={user} open={open} setOpen={setOpen}/>
+            }
           </div>
         </div>
       </div>

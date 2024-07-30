@@ -37,8 +37,15 @@ import {
   UPDATE_USER_RESET,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
-  USER_DETAILS_FAIL,        
-    CLEAR_ERRORS  
+  USER_DETAILS_FAIL,
+  CREATE_CART_REQUEST,
+  CREATE_CART_SUCCESS,
+  CREATE_CART_FAIL,        
+    CLEAR_ERRORS,  
+    GET_CARTS_REQUEST,
+    GET_CARTS_SUCCESS,
+    GET_CARTS_FAIL,
+    CREATE_CART_RESET
 } from "../constants/userConstants"
 
 export const userReducer = ((state = {user :{}},action) =>{
@@ -251,6 +258,56 @@ export const allUsersReducer = (state = { users: [] }, action) => {
           error: action.payload,
         };
   
+      case CLEAR_ERRORS:
+        return {
+          ...state,
+          error: null,
+        };
+  
+      default:
+        return state;
+    }
+};
+
+export const newcartReducer = (state = { carts: [] }, action) => {
+    switch (action.type) {
+      case CREATE_CART_REQUEST:
+      case GET_CARTS_REQUEST:
+        return {
+          ...state,
+          loading: true,
+        };
+      case CREATE_CART_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          isCreated:action.payload,
+        };
+
+      case GET_CARTS_SUCCESS:  
+        return {
+         ...state,
+          loading: false,
+          carts:action.payload,
+        };
+      case CREATE_CART_FAIL:
+        return {
+          ...state,
+          loading: false,
+          error: action.payload,
+        };
+      case GET_CARTS_FAIL:
+        return {
+          ...state,
+          loading: false,
+          carts:[],
+          error: action.payload,
+        };
+      case CREATE_CART_RESET:
+          return {
+            ...state,
+            isCreated:false,
+          };
       case CLEAR_ERRORS:
         return {
           ...state,

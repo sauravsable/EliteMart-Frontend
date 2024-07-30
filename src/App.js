@@ -12,31 +12,33 @@ import LoginSignup from './component/User/LoginSignup.jsx';
 
 import APIURL from './API/Api.js';
 import { useDispatch,useSelector } from 'react-redux';
-import { loadUser } from './actions/userActions.js';
+import { getCarts, loadUser } from './actions/userActions.js';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 import Loader from './component/layout/Loader/Loader.jsx';
-import ProductShimmer from './component/Shimmer/ProductShimmer.jsx';
+
 import MobileViewHeader from './component/layout/MobileViewHeader/MobileViewHeader.jsx';
 
 import Payment from './component/Cart/Payment';
+import CreateCart from './component/User/CreateCart.jsx';
+import CartDetails from './component/Cart/CartDetails.jsx';
 
-const Cart = lazy(()=> import("./component/Cart/Cart.jsx"));
-const About = lazy(()=> import("./component/About/About"));
-const Contact = lazy(()=> import("./component/Contact/Contact"));
-const Product = lazy(()=> import('./component/Product/Product'));
-const Products = lazy(()=> import("./component/Products/Products"));
+import Cart from './component/Cart/Cart.jsx';
+import About from './component/About/About.jsx'
+import Contact from './component/Contact/Contact.jsx'
+import Product from './component/Product/Product.jsx';
+import Products from './component/Products/Products';
 
-const Profile = lazy(()=> import("./component/User/Profile"));
-const UpdateProfile = lazy(()=> import("./component/User/UpdateProfile"))
-const ForgotPassword = lazy(()=>import('./component/User/ForgotPassword'));
-const ResetPassword = lazy(()=>import('./component/User/ResetPassword'));
-const UpdatePassword =  lazy(()=> import('./component/User/UpdatePassword'));
+import Profile from './component/User/Profile';
+import UpdateProfile from './component/User/UpdateProfile';
+import ForgotPassword from './component/User/ForgotPassword';
+import ResetPassword from './component/User/ResetPassword';
+import UpdatePassword from './component/User/UpdatePassword';
+
 
 const Shipping = lazy(()=> import('./component/Cart/Shipping'));
 const ConfirmOrder = lazy(()=> import('./component/Cart/ConfirmOrder'));
-// const Payment = lazy(()=> import('./component/Cart/Payment'));
 const OrderSuccess = lazy(()=> import('./component/Cart/OrderSuccess'));
 const MyOrders = lazy(()=> import('./component/Order/MyOrders'));
 const OrderDetails = lazy(()=> import('./component/Order/OrderDetails'));
@@ -80,13 +82,13 @@ function App() {
   useEffect(() => {
     if(isAuthenticated && isAuthenticated===true){
       getStripeApiKey();
+      dispatch(getCarts())
       console.log("function called");
     }
     
-  }, [isAuthenticated]);
+  }, [isAuthenticated,dispatch]);
 
   
-
   const ProtectedRoute = ({ element, isAdmin}) => {
 
       if (loading === false && isAuthenticated === false) {
@@ -108,23 +110,28 @@ function App() {
         <Header/>
         <Routes>
            <Route exact path="/" Component={Home}/>
-           <Route path='/about' element={<Suspense fallback={<Loader/>}><About/></Suspense>}/>
-           <Route path='/contact' element={<Suspense fallback={<Loader/>}><Contact/></Suspense>}/>
+           <Route path='/about' element={<About/>}/>
+           <Route path='/contact' element={<Contact/>}/>
            <Route exact path="/login" Component={LoginSignup}/>
 
-           <Route path='/cart' element={<Suspense fallback={<Loader/>}><Cart/></Suspense>}/>
-           <Route path='/products' element={<Suspense fallback={<ProductShimmer/>}><Products/></Suspense>}/>
-           <Route exact path='/product/:id' element={<Suspense fallback={<Loader/>}><Product/></Suspense>}/>
-           <Route path='/products/:keyword' element={<Suspense fallback={<ProductShimmer/>}><Products/></Suspense>}/>
+           <Route path='/cart' element={<Cart/>}/>
 
-           <Route path='/password/forgot' element={<Suspense fallback={<Loader/>}><ForgotPassword/></Suspense>}/>
-           <Route path='/password/reset/:token' element={<Suspense fallback={<Loader/>}><ResetPassword/></Suspense>}/>
+           <Route path='/cart/:id' element={<CartDetails/>}/>
+
+           <Route path='/products' element={<Products/>}/>
+           <Route exact path='/product/:id' element={<Product/>}/>
+           <Route path='/products/:keyword' element={<Products/>}/>
+
+           <Route path='/password/forgot' element={<ForgotPassword/>}/>
+           <Route path='/password/reset/:token' element={<ResetPassword/>}/>
 
 
-           <Route path='/account' element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><Profile/></Suspense>} />}/>
-           <Route path="/me/update" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><UpdateProfile/></Suspense>} />}/>
-           <Route path="/password/update" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><UpdatePassword/></Suspense>} />}/>
+           <Route path='/account' element={<ProtectedRoute element={<Profile/>} />}/>
+           <Route path="/me/update" element={<ProtectedRoute element={<UpdateProfile/>} />}/>
+           <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword/>} />}/>
   
+           <Route path='/create/Cart' element={<ProtectedRoute element={<CreateCart/>} />}/>
+
            <Route path='/shipping' element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><Shipping/></Suspense>} />}/>
            <Route exact path="/order/confirm" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><ConfirmOrder/></Suspense>} />}/>
            <Route exact path="/success" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><OrderSuccess/></Suspense>} />}/> 
