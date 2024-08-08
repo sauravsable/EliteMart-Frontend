@@ -25,27 +25,24 @@ import {
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAIL,
     ALL_USERS_REQUEST,
-  ALL_USERS_SUCCESS,
-  ALL_USERS_FAIL,
-  DELETE_USER_REQUEST,
-  DELETE_USER_SUCCESS,
-  DELETE_USER_FAIL,
-  DELETE_USER_RESET,
-  UPDATE_USER_REQUEST,
-  UPDATE_USER_SUCCESS,
-  UPDATE_USER_FAIL,
-  UPDATE_USER_RESET,
-  USER_DETAILS_REQUEST,
-  USER_DETAILS_SUCCESS,
-  USER_DETAILS_FAIL,
-  CREATE_CART_REQUEST,
-  CREATE_CART_SUCCESS,
-  CREATE_CART_FAIL,        
+    ALL_USERS_SUCCESS,
+    ALL_USERS_FAIL,
+    DELETE_USER_REQUEST,
+    DELETE_USER_SUCCESS,
+    DELETE_USER_FAIL,
+    DELETE_USER_RESET,
+    UPDATE_USER_REQUEST,
+    UPDATE_USER_SUCCESS,
+    UPDATE_USER_FAIL,
+    UPDATE_USER_RESET,
+    USER_DETAILS_REQUEST,
+    USER_DETAILS_SUCCESS,
+    USER_DETAILS_FAIL,      
     CLEAR_ERRORS,  
-    GET_CARTS_REQUEST,
-    GET_CARTS_SUCCESS,
-    GET_CARTS_FAIL,
-    CREATE_CART_RESET
+    UPDATE_PROFILEIMAGE_REQUEST,
+    UPDATE_PROFILEIMAGE_SUCCESS,
+    UPDATE_PROFILEIMAGE_FAIL,
+    UPDATE_PROFILEIMAGE_RESET
 } from "../constants/userConstants"
 
 export const userReducer = ((state = {user :{}},action) =>{
@@ -107,6 +104,7 @@ export const userReducer = ((state = {user :{}},action) =>{
 export const profileReducer = (state = {}, action) => {
     switch (action.type) {
       case UPDATE_PROFILE_REQUEST:
+      case UPDATE_PROFILEIMAGE_REQUEST:
       case UPDATE_PASSWORD_REQUEST:
       case UPDATE_USER_REQUEST:
       case DELETE_USER_REQUEST:
@@ -115,6 +113,7 @@ export const profileReducer = (state = {}, action) => {
           loading: true,
         };
       case UPDATE_PROFILE_SUCCESS:
+      case UPDATE_PROFILEIMAGE_SUCCESS:  
       case UPDATE_PASSWORD_SUCCESS:
       case UPDATE_USER_SUCCESS:
         return {
@@ -132,6 +131,7 @@ export const profileReducer = (state = {}, action) => {
         };
   
       case UPDATE_PROFILE_FAIL:
+      case UPDATE_PROFILEIMAGE_FAIL:
       case UPDATE_PASSWORD_FAIL:
       case UPDATE_USER_FAIL:
       case DELETE_USER_FAIL:
@@ -142,6 +142,7 @@ export const profileReducer = (state = {}, action) => {
         };
   
       case UPDATE_PROFILE_RESET:
+      case UPDATE_PROFILEIMAGE_RESET:
       case UPDATE_PASSWORD_RESET:
       case UPDATE_USER_RESET:
         return {
@@ -269,55 +270,4 @@ export const allUsersReducer = (state = { users: [] }, action) => {
     }
 };
 
-export const newcartReducer = (state = { carts: [] }, action) => {
-    switch (action.type) {
-      case CREATE_CART_REQUEST:
-      case GET_CARTS_REQUEST:
-        return {
-          ...state,
-          loading: true,
-        };
-      case CREATE_CART_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          isCreated:action.payload,
-        };
-
-      case GET_CARTS_SUCCESS:  
-        return {
-         ...state,
-          loading: false,
-          carts:action.payload,
-        };
-      case CREATE_CART_FAIL:
-        return {
-          ...state,
-          loading: false,
-          error: action.payload,
-        };
-      case GET_CARTS_FAIL:
-        return {
-          ...state,
-          loading: false,
-          carts:[],
-          error: action.payload,
-        };
-      case CREATE_CART_RESET:
-          return {
-            ...state,
-            isCreated:false,
-          };
-      case CLEAR_ERRORS:
-        return {
-          ...state,
-          error: null,
-        };
-  
-      default:
-        return state;
-    }
-  };
-
-  
 

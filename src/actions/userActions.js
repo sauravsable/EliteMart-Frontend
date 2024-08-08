@@ -37,12 +37,9 @@ import {
     USER_DETAILS_SUCCESS,
     USER_DETAILS_FAIL,     
     CLEAR_ERRORS,  
-    CREATE_CART_REQUEST,
-    CREATE_CART_SUCCESS,
-    CREATE_CART_FAIL,
-    GET_CARTS_REQUEST,
-    GET_CARTS_SUCCESS,
-    GET_CARTS_FAIL
+    UPDATE_PROFILEIMAGE_REQUEST,
+    UPDATE_PROFILEIMAGE_SUCCESS,
+    UPDATE_PROFILEIMAGE_FAIL
 } from "../constants/userConstants";
 import APIURL from '../API/Api';
 
@@ -147,7 +144,7 @@ export const updateProfile = (userData)=> async(dispatch)=>{
             type : UPDATE_PROFILE_REQUEST
         });
 
-       const config = { header : {"Content-Type":"multipart/form-data"},withCredentials: true} 
+       const config = { header : {"Content-Type":"application/json"},withCredentials: true} 
 
         const {data} = await axios.put(`${APIURL}/me/update`,userData,config);
         
@@ -164,6 +161,28 @@ export const updateProfile = (userData)=> async(dispatch)=>{
     }
 };
 
+export const updateProfileImage = (userData)=> async(dispatch)=>{
+    try{
+        dispatch({
+            type : UPDATE_PROFILEIMAGE_REQUEST
+        });
+
+       const config = { header : {"Content-Type":"multipart/form-data"},withCredentials: true} 
+
+        const {data} = await axios.put(`${APIURL}/me/updateProfileImage`,userData,config);
+        
+        dispatch({
+            type : UPDATE_PROFILEIMAGE_SUCCESS,
+            payload  : data.success
+        })
+    }
+    catch(error){
+        dispatch({
+            type : UPDATE_PROFILEIMAGE_FAIL,
+            payload : error.response.data.message
+        });
+    }
+};
 
 //update password
 export const updatePassword = (passwords)=> async(dispatch)=>{
@@ -309,48 +328,6 @@ export const getAllUsers = () => async (dispatch) => {
       });
     }
   };
-
-// create cart
-export const createCart = ({cartname}) => async (dispatch) => {
-        try {
-        
-          dispatch({ type: CREATE_CART_REQUEST});
-      
-          const config = {header : {"Content-Type":"application/json"},withCredentials: true} 
-    
-          const { data } = await axios.post(`${APIURL}/create/cart`,{cartname},config);
-        
-          console.log(data);
-          dispatch({ type: CREATE_CART_SUCCESS, payload: data.success });
-        } catch (error) {
-          dispatch({
-            type: CREATE_CART_FAIL,
-            payload: error.response.data.message,
-          });
-        }
-};
-      
-  
-export const getCarts = () => async (dispatch) => {
-    try {
-    
-      dispatch({ type: GET_CARTS_REQUEST});
-  
-      const config = {header : {"Content-Type":"application/json"},withCredentials: true} 
-
-      const { data } = await axios.get(`${APIURL}/getcarts`,config);
-
-      console.log("carts",data);
-    
-      console.log(data);
-      dispatch({ type: GET_CARTS_SUCCESS, payload: data.carts });
-    } catch (error) {
-      dispatch({
-        type: GET_CARTS_FAIL,
-        payload: error.response.data.message,
-      });
-    }
-};
 
 // clearing Errors
 export const clearErrors = ()=> async(dispatch)=>{

@@ -28,6 +28,7 @@
   
   .profileContainer > div:first-child > img {
     width: 20vmax;
+    height: 23vmax;
     border-radius: 100%;
     transition: all 0.5s;
   }
@@ -36,7 +37,7 @@
     transform: scale(1.05);
   }
   
-  .profileContainer > div:first-child > a {
+  .profileContainer > div:first-child > a, .profilechangebtn {
     border: none;
     background-color: tomato;
     font: 400 1vmax "Roboto";
@@ -44,7 +45,7 @@
     text-decoration: none;
     padding: 0.5vmax;
     width: 30%;
-    margin: 4vmax;
+    margin:1.2vmax 4vmax;
     text-align: center;
     transition: all 0.5s;
   }

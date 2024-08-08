@@ -3,11 +3,11 @@ import "./updateprofile.css";
 import Loader from "../layout/Loader/Loader";
 import { FaCartPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors,createCart, getCarts} from "../../actions/userActions";
+import { clearErrors,createCart, getCarts} from "../../actions/cartActions";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData/MetaData";
 import { useNavigate } from "react-router-dom";
-import { CREATE_CART_RESET } from "../../constants/userConstants";
+import { CREATE_CART_RESET } from "../../constants/cartConstants";
 
 const CreateCart = () => {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ const CreateCart = () => {
 
     if (isCreated) {
         alert.success("Cart Created Successfully");
-        navigate("/account");
+        navigate("/products");
 
         dispatch({
           type: CREATE_CART_RESET,

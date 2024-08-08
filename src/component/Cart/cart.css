@@ -2,6 +2,7 @@
     margin: auto;
     text-align: center;
     padding: 10vmax;
+    /* padding-bottom: 5vmax; */
     height: 80vh;
     display: flex;
     flex-direction: column;

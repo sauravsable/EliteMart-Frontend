@@ -13,11 +13,13 @@ import { Country, State } from "country-state-city";
 import { useAlert } from "react-alert";
 import CheckoutSteps from "../Cart/CheckoutSteps";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const Shipping = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const navigate = useNavigate();
+  const {cartId} = useParams();
 
   const { shippingInfo } = useSelector((state) => state.cart);
 
@@ -38,7 +40,13 @@ const Shipping = () => {
     dispatch(
       saveShippingInfo({ address, city, state, country, pinCode, phoneNo })
     );
-   navigate("/order/confirm");
+
+    if(cartId === "myCart"){
+      navigate("/order/confirm/myCart");
+    }
+    else{
+      navigate(`/order/confirm/${cartId}`);
+    }
   };
   
 

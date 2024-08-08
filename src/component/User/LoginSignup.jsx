@@ -39,10 +39,6 @@ export default function LoginSignup({location}) {
 
     const { name, email, password } = user;
 
-    const [avatar, setAvatar] = useState("/Profile.png");
-    const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
-
-
     const loginSubmit = (e)=>{
         e.preventDefault();
         dispatch(login(loginEmail,loginPassword));
@@ -52,37 +48,17 @@ export default function LoginSignup({location}) {
     const registerSubmit = async (e) => {
         e.preventDefault();
 
-        // const data = await uploadToCloudinary(avatar);
-
         const formData = new FormData();
 
         formData.set("name",name);
         formData.set("email",email);
         formData.set("password",password);
-        formData.set("avatar",avatar);
-        // formData.set("publicId",data.public_id);
-        // formData.set("secureUrl",data.secure_url);
-
         dispatch(register(formData));
 
       };
 
       const registerDataChange = (e) => {
-        if (e.target.name === 'avatar') {
-            const file = e.target.files[0];
-            setAvatar(file)
-            const reader = new FileReader();
-
-            reader.onload = () => {
-                if (reader.readyState === 2) {
-                    setAvatarPreview(reader.result);
-                }
-            };
-
-            reader.readAsDataURL(file);
-        } else {
-            setUser({ ...user, [e.target.name]: e.target.value });
-        }
+        setUser({ ...user, [e.target.name]: e.target.value });
     };
 
 
@@ -198,15 +174,6 @@ export default function LoginSignup({location}) {
                   />
                 </div>
 
-                <div id="registerImage">
-                  <img src={avatarPreview} alt="Avatar Preview" />
-                  <input
-                    type="file"
-                    name="avatar"
-                    accept="image/*"
-                    onChange={registerDataChange}
-                  />
-                </div>
                 <input type="submit" value="Register" className="signUpBtn" />
               </form>
     </div>

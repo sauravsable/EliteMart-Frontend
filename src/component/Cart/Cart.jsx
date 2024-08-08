@@ -37,7 +37,7 @@ const Cart = () => {
   };
 
   const checkoutHandler = () => {
-    navigate("/shipping")
+    navigate("/shipping/myCart")
   };
 
   return (
@@ -66,7 +66,7 @@ const Cart = () => {
                   <div className="cartInput">
                     <button
                       onClick={() =>
-                        decreaseQuantity(item.product, item.quantity)
+                        decreaseQuantity(item.product, item.quantity,item.stock)
                       }
                     >
                       -

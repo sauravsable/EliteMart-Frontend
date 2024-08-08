@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from "react";
+import React, { Fragment, useEffect, useRef,useState } from "react";
 import CheckoutSteps from "../Cart/CheckoutSteps";
 import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../layout/MetaData/MetaData";
@@ -20,9 +20,11 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import { createOrder, clearErrors } from "../../actions/orderActions";
 import { useNavigate } from "react-router-dom";
 import APIURL from "../../API/Api";
-
+import { useParams } from "react-router-dom";
+import { getCartDetails } from "../../actions/cartActions";
 const Payment = () => {
   const navigate = useNavigate();
+  const {cartId} = useParams();
 
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
 
@@ -35,6 +37,33 @@ const Payment = () => {
   const { shippingInfo, cartItems } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
   const { error } = useSelector((state) => state.newOrder);
+  const {cartDetails} = useSelector((state)=>state.newcart);
+
+  const [cartItemsToDisplay, setCartItemsToDisplay] = useState([]);
+
+  useEffect(() => {
+    if (cartId !== 'myCart') {
+      dispatch(getCartDetails(cartId));
+    }
+  }, [cartId, dispatch]);
+
+  useEffect(() => {
+    console.log("cartDetails: ", cartDetails);
+
+    const fetchedCartItems = cartDetails && cartDetails.products && cartDetails.products.length > 0 ? cartDetails.products.map((item) => ({
+      product: item.product._id,
+      name: item.product.name,
+      price: item.product.price,
+      image: item.product.images[0].url,
+      stock: item.product.stock,
+      quantity: item.quantity,
+    })) : [];
+
+    const itemsToDisplay = cartId === 'myCart' ? cartItems : fetchedCartItems;
+    setCartItemsToDisplay(itemsToDisplay);
+    console.log("cart display items", itemsToDisplay);
+
+  }, [cartDetails, cartItems, cartId]);
 
   const paymentData = {
     amount: Math.round(orderInfo.totalPrice * 100),
@@ -42,7 +71,7 @@ const Payment = () => {
 
   const order = {
     shippingInfo,
-    orderItems: cartItems,
+    orderItems: cartItemsToDisplay,
     itemsPrice: orderInfo.subtotal,
     taxPrice: orderInfo.tax,
     shippingPrice: orderInfo.shippingCharges,
@@ -83,6 +112,8 @@ const Payment = () => {
         payBtn.current.disabled = false;
 
         alert.error(result.error.message);
+        console.log(result.error.message);
+        
       } else {
         if (result.paymentIntent.status === "succeeded") {
           order.paymentInfo = {

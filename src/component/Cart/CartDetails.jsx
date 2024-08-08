@@ -1,50 +1,73 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect} from "react";
+import "./CartDetails.css"
 import "./cart.css";
-import CartItemCard from "./CartItemCard";
+import CartItems from "./CartItems";
 import { useSelector, useDispatch } from "react-redux";
-import { addItemsToCart, removeItemsFromCart } from "../../actions/cartActions";
+import { removeProductFromCart } from "../../actions/cartActions";
 import { Typography } from "@material-ui/core";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import MetaData from "../layout/MetaData/MetaData";
+import { getCartDetails } from "../../actions/cartActions";
+import { useParams } from "react-router-dom";
+import { getAllUsers} from "../../actions/userActions";
+import Members from "../layout/Members/Members";
+import { addProductToCart } from "../../actions/cartActions";
 
 const CartDetails = () => {
+  const {id} = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
 
-  const { cartItems } = useSelector(state => state.cart);
-  console.log(cartItems);
+  useEffect(()=>{
+    dispatch(getCartDetails(id))
+    dispatch(getAllUsers());
+  },[dispatch,id])
 
-  const increaseQuantity = (id, quantity, stock) => {
+  const { cartDetails } = useSelector(state => state.newcart);
+
+  const increaseQuantity = (productId, quantity, stock) => {
     const newQty = quantity + 1;
     if (stock <= quantity) {
       return;
     }
-    dispatch(addItemsToCart(id, newQty));
+    dispatch(addProductToCart({cartId:id,productId, quantity:newQty}));
+    setTimeout(()=>{
+      dispatch(getCartDetails(id))
+    },500)
   };
 
-  const decreaseQuantity = (id, quantity) => {
+  const decreaseQuantity = (productId, quantity) => {
     const newQty = quantity - 1;
     if (1 >= quantity) {
       return;
     }
-    dispatch(addItemsToCart(id, newQty));
+    dispatch(addProductToCart({cartId:id,productId, quantity:newQty}));
+    setTimeout(()=>{
+      dispatch(getCartDetails(id))
+    },500)
   };
 
-  const deleteCartItems = (id) => {
-    dispatch(removeItemsFromCart(id));
+  const deleteCartProduct = (productId) => {
+    dispatch(removeProductFromCart({cartId:id,productId}));
+    setTimeout(()=>{
+      dispatch(getCartDetails(id))
+    },500)
+   
   };
 
   const checkoutHandler = () => {
-    navigate("/shipping")
+    navigate(`/shipping/${id}`)
   };
 
   return (
     <Fragment>
       <MetaData title="Cart" />
-      {cartItems.length === 0 ? (
+      {cartDetails?.products?.length === 0 ? (
         <div className="emptyCart">
+          <h2 className="homeheading" style={{textTransform:"capitalize"}}>{cartDetails.cartName}</h2>
           <RemoveShoppingCartIcon />
 
           <Typography>No Product in Your Cart</Typography>
@@ -53,32 +76,32 @@ const CartDetails = () => {
       ) : (
         <Fragment>
           <div className="cartPage">
-          <h2 className="homeheading">Cart Name</h2>
+          <h2 className="homeheading" style={{textTransform:"capitalize"}}>{cartDetails.cartName}</h2>
             <div className="cartHeader">
               <p>Product</p>
               <p>Quantity</p>
               <p>Subtotal</p>
             </div>
 
-            {cartItems &&
-              cartItems.map((item) => (
-                <div className="cartContainer" key={item.product}>
-                  <CartItemCard item={item} deleteCartItems={deleteCartItems} />
+            {cartDetails && cartDetails.products && cartDetails.products.length > 0 &&
+              cartDetails.products.map((item) => (
+                <div className="cartContainer" key={item.product._id}>
+                  <CartItems item={item.product} deleteCartProduct={deleteCartProduct} cartId={id} />
                   <div className="cartInput">
                     <button
                       onClick={() =>
-                        decreaseQuantity(item.product, item.quantity)
+                        decreaseQuantity(item.product._id, item.quantity)
                       }
                     >
                       -
                     </button>
-                    <input type="number" value={item.quantity} readOnly />
+                    <input type="number" value={item?.quantity} readOnly />
                     <button
                       onClick={() =>
                         increaseQuantity(
-                          item.product,
+                          item.product._id,
                           item.quantity,
-                          item.stock
+                          item.product.stock
                         )
                       }
                     >
@@ -86,7 +109,7 @@ const CartDetails = () => {
                     </button>
                   </div>
                   <p className="cartSubtotal">{`₹${
-                    item.price * item.quantity
+                    item.product.price * item.quantity
                   }`}</p>
                 </div>
               ))}
@@ -95,10 +118,10 @@ const CartDetails = () => {
               <div></div>
               <div className="cartGrossProfitBox">
                 <p>Gross Total</p>
-                <p>{`₹${cartItems.reduce(
-                  (acc, item) => acc + item.quantity * item.price,
-                  0
-                )}`}</p>
+                <p>{`₹${(cartDetails.products && Array.isArray(cartDetails.products) ? cartDetails.products.reduce(
+                   (acc, item) => acc + (item.product.price * item.quantity || 0),
+                    0
+                   ) : 0)}`}</p>
               </div>
               <div></div>
               <div className="checkOutBtn">
@@ -108,6 +131,16 @@ const CartDetails = () => {
           </div>
         </Fragment>
       )}
+      
+      <div className ="cartusersdiv">
+      
+      <Members id={id}/>
+
+        <div className="usersdiv">
+          <h2 className="homeheading" style={{textTransform:"capitalize"}}>Chat With Cart Members</h2>
+      
+        </div>
+      </div>
     </Fragment>
   );
 };

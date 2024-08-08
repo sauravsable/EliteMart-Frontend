@@ -12,7 +12,8 @@ import LoginSignup from './component/User/LoginSignup.jsx';
 
 import APIURL from './API/Api.js';
 import { useDispatch,useSelector } from 'react-redux';
-import { getCarts, loadUser } from './actions/userActions.js';
+import { loadUser } from './actions/userActions.js';
+import { getCarts} from './actions/cartActions.js';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -35,6 +36,7 @@ import UpdateProfile from './component/User/UpdateProfile';
 import ForgotPassword from './component/User/ForgotPassword';
 import ResetPassword from './component/User/ResetPassword';
 import UpdatePassword from './component/User/UpdatePassword';
+import AcceptInvitation from './component/User/AcceptInvitation.jsx';
 
 
 const Shipping = lazy(()=> import('./component/Cart/Shipping'));
@@ -63,8 +65,6 @@ function App() {
     const config = {header : {"Content-Type":"application/json"},withCredentials: true};
 
     const {data} = await axios.get(`${APIURL}/stripeapikey`,config);
-
-    console.log("stripe data",data);
     setstripeApiKey(data.stripeApiKey);
   }
 
@@ -83,7 +83,6 @@ function App() {
     if(isAuthenticated && isAuthenticated===true){
       getStripeApiKey();
       dispatch(getCarts())
-      console.log("function called");
     }
     
   }, [isAuthenticated,dispatch]);
@@ -125,6 +124,7 @@ function App() {
            <Route path='/password/forgot' element={<ForgotPassword/>}/>
            <Route path='/password/reset/:token' element={<ResetPassword/>}/>
 
+           <Route path='/accept-invitation' element={<AcceptInvitation/>}/>
 
            <Route path='/account' element={<ProtectedRoute element={<Profile/>} />}/>
            <Route path="/me/update" element={<ProtectedRoute element={<UpdateProfile/>} />}/>
@@ -132,8 +132,9 @@ function App() {
   
            <Route path='/create/Cart' element={<ProtectedRoute element={<CreateCart/>} />}/>
 
-           <Route path='/shipping' element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><Shipping/></Suspense>} />}/>
-           <Route exact path="/order/confirm" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><ConfirmOrder/></Suspense>} />}/>
+           <Route path='/shipping/:cartId' element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><Shipping/></Suspense>} />}/>
+           <Route exact path="/order/confirm/:cartId" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><ConfirmOrder/></Suspense>} />}/>
+           
            <Route exact path="/success" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><OrderSuccess/></Suspense>} />}/> 
            <Route exact path="/orders" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><MyOrders/></Suspense>} />}/>
            <Route exact path="/order/:id" element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><OrderDetails/></Suspense>} />}/>
@@ -157,7 +158,7 @@ function App() {
            <Route path={"/admin/reviews"} element={<ProtectedRoute element={<Suspense fallback={<Loader/>}><ProductReviews/></Suspense>} isAdmin={true}/>}/>
           
           {isAuthenticated  && isAuthenticated === true && stripeApiKey && (
-          <Route exact path={"/process/payment"} element={<Elements stripe={loadStripe(stripeApiKey)}><Payment /></Elements>} />
+          <Route exact path={"/process/payment/:cartId"} element={<Elements stripe={loadStripe(stripeApiKey)}><Payment /></Elements>} />
           )}
 
         </Routes>

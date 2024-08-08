@@ -1,4 +1,4 @@
-import React, { Fragment} from "react";
+import React, { Fragment,useEffect,useState} from "react";
 import CheckoutSteps from "../Cart/CheckoutSteps";
 import { useSelector } from "react-redux";
 import MetaData from "../layout/MetaData/MetaData";
@@ -6,13 +6,47 @@ import "./confirmorder.css";
 import { Link } from "react-router-dom";
 import { Typography } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useDispatch} from "react-redux";
+import { getCartDetails } from "../../actions/cartActions";
 
 const ConfirmOrder = () => {
   const navigate =  useNavigate();
-  const { shippingInfo, cartItems } = useSelector((state) => state.cart);
-  const { user} = useSelector((state) => state.user);
+  const {cartId} = useParams();
+  const dispatch = useDispatch();
 
-  const subtotal = cartItems.reduce(
+  const { shippingInfo, cartItems } = useSelector((state) => state.cart);
+  
+  const { user} = useSelector((state) => state.user);
+  const {cartDetails} = useSelector((state)=>state.newcart);
+  const [cartItemsToDisplay, setCartItemsToDisplay] = useState([]);
+
+  useEffect(() => {
+    if (cartId !== 'myCart') {
+      dispatch(getCartDetails(cartId));
+    }
+  }, [cartId, dispatch]);
+
+  useEffect(() => {
+    console.log("cartDetails: ", cartDetails);
+
+    const fetchedCartItems = cartDetails && cartDetails.products && cartDetails.products.length > 0 ? cartDetails.products.map((item) => ({
+      product: item.product._id,
+      name: item.product.name,
+      price: item.product.price,
+      image: item.product.images[0].url,
+      stock: item.product.stock,
+      quantity: item.quantity,
+    })) : [];
+
+    const itemsToDisplay = cartId === 'myCart' ? cartItems : fetchedCartItems;
+    setCartItemsToDisplay(itemsToDisplay);
+    console.log("cart display items", itemsToDisplay);
+
+  }, [cartDetails, cartItems, cartId]);
+
+
+  const subtotal = cartItemsToDisplay.reduce(
     (acc, item) => acc + item.quantity * item.price,
     0
   );
@@ -35,7 +69,12 @@ const ConfirmOrder = () => {
 
     sessionStorage.setItem("orderInfo", JSON.stringify(data));
 
-    navigate("/process/payment");
+    if(cartId === "myCart"){
+      navigate("/process/payment/myCart");
+    }
+    else{
+      navigate(`/process/payment/${cartId}`);
+    }
   };
 
   return (
@@ -65,8 +104,8 @@ const ConfirmOrder = () => {
           <div className="confirmCartItems">
             <Typography>Your Cart Items:</Typography>
             <div className="confirmCartItemsContainer">
-              {cartItems &&
-                cartItems.map((item) => (
+              {cartItemsToDisplay &&
+                cartItemsToDisplay.map((item) => (
                   <div key={item.product}>
                     <img src={item.image} alt="Product" />
                     <Link to={`/product/${item.product}`}>

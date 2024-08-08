@@ -1,6 +1,8 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState} from "react";
 import Carousel from "react-material-ui-carousel";
 import "./product.css";
+import { TbShoppingCartShare } from 'react-icons/tb';
+import { IoMdClose } from 'react-icons/io';
 import { useSelector, useDispatch } from "react-redux";
 import {
   clearErrors,
@@ -22,10 +24,20 @@ import {
 import { Rating } from "@material-ui/lab";
 import { NEW_REVIEW_RESET } from "../../constants/productConstants";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {addProductToCart} from '../../actions/cartActions.js';
+import { ADD_PRODUCT_TO_CART_RESET } from "../../constants/cartConstants.js";
+
 const ProductDetails = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const {id} = useParams();
+  const navigate = useNavigate();
+
+  const [showOptions, setShowOptions] = useState(false);
+
+  const { isAuthenticated} = useSelector((state) => state.user);
+  const {carts} = useSelector(state=> state.newcart);
 
   const { product, loading, error } = useSelector(
     (state) => state.productDetail
@@ -33,6 +45,11 @@ const ProductDetails = () => {
 
   const { success, error: reviewError } = useSelector(
     (state) => state.newReview
+  );
+
+
+  const { isAdded, error: productError } = useSelector(
+    (state) => state.cartProduct
   );
 
   const options = {
@@ -48,7 +65,7 @@ const ProductDetails = () => {
   const [comment, setComment] = useState("");
 
   const increaseQuantity = () => {
-    if (product.Stock <= quantity) return;
+    if (product.stock <= quantity) return;
 
     const qty = quantity + 1;
     setQuantity(qty);
@@ -64,7 +81,14 @@ const ProductDetails = () => {
   const addToCartHandler = () => {
     dispatch(addItemsToCart(id, quantity));
     alert.success("Item Added To Cart");
+    setShowOptions(false)
   };
+
+  const addProductToCartHandler = (e,cartId)=>{
+    e.preventDefault();
+    dispatch(addProductToCart({cartId,productId:id,quantity}));
+    setShowOptions(false);
+  }
 
   const submitReviewToggle = () => {
     open ? setOpen(false) : setOpen(true);
@@ -97,8 +121,24 @@ const ProductDetails = () => {
       alert.success("Review Submitted Successfully");
       dispatch({ type: NEW_REVIEW_RESET });
     }
+
+    if (productError) {
+      alert.error(productError);
+      dispatch(clearErrors());
+    }
+    
+    if (isAdded) {
+      alert.success("Product Added to Cart Successfully");
+      dispatch({ type: ADD_PRODUCT_TO_CART_RESET });
+    }
+
+
     dispatch(getProductDetail(id));
-  }, [dispatch, id, error, alert, reviewError, success]);
+  }, [dispatch, id, error, alert, reviewError, success,productError,isAdded]);
+
+  const handleButtonClick = () => {
+    setShowOptions(!showOptions);
+  };
 
   return (
     <Fragment>
@@ -106,7 +146,7 @@ const ProductDetails = () => {
         <Loader />
       ) : (
         <Fragment>
-          <MetaData title={`${product.name} -- ECOMMERCE`} />
+          <MetaData title={`${product.name} -- EliteMart`} />
           <div className="ProductDetails">
             <div>
               <Carousel className="imageCarousel">
@@ -142,12 +182,30 @@ const ProductDetails = () => {
                     <input readOnly type="number" value={quantity} />
                     <button onClick={increaseQuantity}>+</button>
                   </div>
-                  <button
+                  <button className="addtocartbtn"
                     disabled={product.Stock < 1 ? true : false}
-                    onClick={addToCartHandler}
+                    onClick={handleButtonClick}
                   >
                     Add to Cart
                   </button>
+                  {showOptions && (
+                    <div className="options-container">
+                      <IoMdClose className="close-icon" onClick={()=>{setShowOptions(false)}} />
+                      <h6 style={{color:"white"}}>Select Cart</h6>
+                      
+                      <button className="option-button" onClick={addToCartHandler}>My Cart</button>
+                      {isAuthenticated && isAuthenticated === true && carts && carts.length > 0 ? 
+                        carts.map((cart) => (
+                        <button key={cart.id} className="option-button" 
+                            onClick={(e) => addProductToCartHandler(e,cart._id)}>
+                          <TbShoppingCartShare /> {cart.cartName}
+                        </button>
+                      ))
+                      :
+                      <button className="option-button" onClick={()=>{navigate("/create/Cart")}}>Others</button>
+                      }
+                    </div>
+                    )}
                 </div>
 
                 <p>
