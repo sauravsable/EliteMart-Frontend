@@ -123,6 +123,12 @@
     cursor: pointer;
     border-radius: 30px;
   }
+
+  @media screen and (max-width:768px) {
+    .emptyCart {
+      padding: 5vmax;
+    }
+  }
   
   @media screen and (max-width: 600px) {
     .cartPage {
