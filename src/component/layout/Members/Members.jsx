@@ -26,7 +26,9 @@ export default function Members({ id }) {
   const { user } = useSelector((state) => state.user);
   const { cartDetails } = useSelector((state) => state.newcart);
   const { users } = useSelector((state) => state.allUsers);
-  const { error, isInvited, isRemoved } = useSelector((state) => state.invitation);
+  const { error, isInvited, isRemoved } = useSelector(
+    (state) => state.invitation
+  );
 
   useEffect(() => {
     if (error) {
@@ -57,7 +59,9 @@ export default function Members({ id }) {
     formData.set("userId", user._id);
     formData.set("cartId", id);
 
-    dispatch(cartInvitation({ cartId: id, userId: user._id, userEmail: user.email }));
+    dispatch(
+      cartInvitation({ cartId: id, userId: user._id, userEmail: user.email })
+    );
 
     setTimeout(() => {
       dispatch(getCartDetails(id));
@@ -119,50 +123,54 @@ export default function Members({ id }) {
           </div>
         )}
       </div>
-      {cartDetails && cartDetails.members && cartDetails.members.length > 0 ? (
-        cartDetails.members
-          .filter((mem) => mem.user._id !== user?._id)
-          .map((member, index) => (
-            <div className="userDetaildiv" key={index}>
-              {member?.user?.avatar?.url ? (
-                <img
-                  className="userDetailImage"
-                  src={member.user.avatar.url}
-                  alt={`${member.user.name}'s avatar`}
-                />
-              ) : (
-                <img
-                  className="userDetailImage"
-                  src={profileImage}
-                  alt="user avatar"
-                />
-              )}
-              <div>{member.user.name}</div>
-              <div style={{ textTransform: "capitalize" }}>
-                {member.status === "canceled" ? (
-                  <>
-                    <span style={{ paddingRight: "10px", margin: "0" }}>
-                      {member.status}
-                    </span>
+      <div className="overflow-y-auto h-60">
+        {cartDetails &&
+        cartDetails.members &&
+        cartDetails.members.length > 0 ? (
+          cartDetails.members
+            .filter((mem) => mem.user._id !== user?._id)
+            .map((member, index) => (
+              <div className="userDetaildiv" key={index}>
+                {member?.user?.avatar?.url ? (
+                  <img
+                    className="userDetailImage"
+                    src={member.user.avatar.url}
+                    alt={`${member.user.name}'s avatar`}
+                  />
+                ) : (
+                  <img
+                    className="userDetailImage"
+                    src={profileImage}
+                    alt="user avatar"
+                  />
+                )}
+                <div>{member.user.name}</div>
+                <div style={{ textTransform: "capitalize" }}>
+                  {member.status === "canceled" ? (
+                    <>
+                      <span style={{ paddingRight: "10px", margin: "0" }}>
+                        {member.status}
+                      </span>
+                      <MdDeleteOutline
+                        onClick={(e) => removeMember(e, member?.user)}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </>
+                  ) : member.status === "pending" ? (
+                    <span>{member.status}</span>
+                  ) : member.status === "accepted" ? (
                     <MdDeleteOutline
                       onClick={(e) => removeMember(e, member?.user)}
                       style={{ cursor: "pointer" }}
                     />
-                  </>
-                ) : member.status === "pending" ? (
-                  <span>{member.status}</span>
-                ) : member.status === "accepted" ? (
-                  <MdDeleteOutline
-                    onClick={(e) => removeMember(e, member?.user)}
-                    style={{ cursor: "pointer" }}
-                  />
-                ) : null}
+                  ) : null}
+                </div>
               </div>
-            </div>
-          ))
-      ) : (
-        <div>No members found</div>
-      )}
+            ))
+        ) : (
+          <div>No members found</div>
+        )}
+      </div>
     </div>
   );
 }
