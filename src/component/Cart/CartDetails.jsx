@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect} from "react";
-import "./CartDetails.css"
+import React, { Fragment, useEffect } from "react";
+import "./CartDetails.css";
 import "./cart.css";
 import CartItems from "./CartItems";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,32 +11,32 @@ import { useNavigate } from "react-router-dom";
 import MetaData from "../layout/MetaData/MetaData";
 import { getCartDetails } from "../../actions/cartActions";
 import { useParams } from "react-router-dom";
-import { getAllUsers} from "../../actions/userActions";
+import { getAllUsers } from "../../actions/userActions";
 import Members from "../layout/Members/Members";
 import { addProductToCart } from "../../actions/cartActions";
+import Chat from "../chat/Chat";
 
 const CartDetails = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
 
-  useEffect(()=>{
-    dispatch(getCartDetails(id))
+  useEffect(() => {
+    dispatch(getCartDetails(id));
     dispatch(getAllUsers());
-  },[dispatch,id])
+  }, [dispatch, id]);
 
-  const { cartDetails } = useSelector(state => state.newcart);
+  const { cartDetails } = useSelector((state) => state.newcart);
 
   const increaseQuantity = (productId, quantity, stock) => {
     const newQty = quantity + 1;
     if (stock <= quantity) {
       return;
     }
-    dispatch(addProductToCart({cartId:id,productId, quantity:newQty}));
-    setTimeout(()=>{
-      dispatch(getCartDetails(id))
-    },500)
+    dispatch(addProductToCart({ cartId: id, productId, quantity: newQty }));
+    setTimeout(() => {
+      dispatch(getCartDetails(id));
+    }, 500);
   };
 
   const decreaseQuantity = (productId, quantity) => {
@@ -44,22 +44,21 @@ const CartDetails = () => {
     if (1 >= quantity) {
       return;
     }
-    dispatch(addProductToCart({cartId:id,productId, quantity:newQty}));
-    setTimeout(()=>{
-      dispatch(getCartDetails(id))
-    },500)
+    dispatch(addProductToCart({ cartId: id, productId, quantity: newQty }));
+    setTimeout(() => {
+      dispatch(getCartDetails(id));
+    }, 500);
   };
 
   const deleteCartProduct = (productId) => {
-    dispatch(removeProductFromCart({cartId:id,productId}));
-    setTimeout(()=>{
-      dispatch(getCartDetails(id))
-    },500)
-   
+    dispatch(removeProductFromCart({ cartId: id, productId }));
+    setTimeout(() => {
+      dispatch(getCartDetails(id));
+    }, 500);
   };
 
   const checkoutHandler = () => {
-    navigate(`/shipping/${id}`)
+    navigate(`/shipping/${id}`);
   };
 
   return (
@@ -67,7 +66,9 @@ const CartDetails = () => {
       <MetaData title="Cart" />
       {cartDetails?.products?.length === 0 ? (
         <div className="emptyCart">
-          <h2 className="homeheading" style={{textTransform:"capitalize"}}>{cartDetails.cartName}</h2>
+          <h2 className="homeheading" style={{ textTransform: "capitalize" }}>
+            {cartDetails.cartName}
+          </h2>
           <RemoveShoppingCartIcon />
 
           <Typography>No Product in Your Cart</Typography>
@@ -76,17 +77,25 @@ const CartDetails = () => {
       ) : (
         <Fragment>
           <div className="cartPage">
-          <h2 className="homeheading" style={{textTransform:"capitalize"}}>{cartDetails.cartName}</h2>
+            <h2 className="homeheading" style={{ textTransform: "capitalize" }}>
+              {cartDetails.cartName}
+            </h2>
             <div className="cartHeader">
               <p>Product</p>
               <p>Quantity</p>
               <p>Subtotal</p>
             </div>
 
-            {cartDetails && cartDetails.products && cartDetails.products.length > 0 &&
+            {cartDetails &&
+              cartDetails.products &&
+              cartDetails.products.length > 0 &&
               cartDetails.products.map((item) => (
                 <div className="cartContainer" key={item.product._id}>
-                  <CartItems item={item.product} deleteCartProduct={deleteCartProduct} cartId={id} />
+                  <CartItems
+                    item={item.product}
+                    deleteCartProduct={deleteCartProduct}
+                    cartId={id}
+                  />
                   <div className="cartInput">
                     <button
                       onClick={() =>
@@ -118,10 +127,15 @@ const CartDetails = () => {
               <div></div>
               <div className="cartGrossProfitBox">
                 <p>Gross Total</p>
-                <p>{`₹${(cartDetails.products && Array.isArray(cartDetails.products) ? cartDetails.products.reduce(
-                   (acc, item) => acc + (item.product.price * item.quantity || 0),
-                    0
-                   ) : 0)}`}</p>
+                <p>{`₹${
+                  cartDetails.products && Array.isArray(cartDetails.products)
+                    ? cartDetails.products.reduce(
+                        (acc, item) =>
+                          acc + (item.product.price * item.quantity || 0),
+                        0
+                      )
+                    : 0
+                }`}</p>
               </div>
               <div></div>
               <div className="checkOutBtn">
@@ -131,14 +145,15 @@ const CartDetails = () => {
           </div>
         </Fragment>
       )}
-      
-      <div className ="cartusersdiv">
-      
-      <Members id={id}/>
 
-        <div className="usersdiv">
-          <h2 className="homeheading" style={{textTransform:"capitalize"}}>Chat With Cart Members</h2>
-      
+      <div className="cartusersdiv ">
+        <Members id={id} />
+
+        <div className="usersdiv ">
+          <h2 className="homeheading" style={{ textTransform: "capitalize" }}>
+            Chat With Cart Members
+          </h2>
+          <Chat roomId={id} className=""/>
         </div>
       </div>
     </Fragment>
