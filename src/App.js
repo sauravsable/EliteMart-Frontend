@@ -38,7 +38,6 @@ import ResetPassword from './component/User/ResetPassword';
 import UpdatePassword from './component/User/UpdatePassword';
 import AcceptInvitation from './component/User/AcceptInvitation.jsx';
 
-
 const Shipping = lazy(()=> import('./component/Cart/Shipping'));
 const ConfirmOrder = lazy(()=> import('./component/Cart/ConfirmOrder'));
 const OrderSuccess = lazy(()=> import('./component/Cart/OrderSuccess'));
