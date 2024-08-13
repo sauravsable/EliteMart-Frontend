@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import "./chat.css";
+import { useSelector } from "react-redux";
 const socket = io("http://localhost:5500", {
   withCredentials: true,
 });
@@ -8,23 +9,27 @@ const socket = io("http://localhost:5500", {
 function Chat({ roomId }) {
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const { user } = useSelector((state) => state.user);
+  console.log(user, "user");
 
   useEffect(() => {
-    // You can use localStorage or another method to set a unique identifier for the user
-    const currentUser = localStorage.getItem("currentUser") || "user";
-    setIsCurrentUser(currentUser);
+    // Fetch the current user ID from localStorage or some other source
+    // const currentUserId = localStorage.getItem("currentUserId") || "defaultUserId";
 
+    // Join the room
     socket.emit("joinRoom", roomId);
 
+    // Listen for previous messages
     socket.on("previousMessages", (messages) => {
       setChat(messages);
     });
 
+    // Listen for new messages
     socket.on("message", (data) => {
       setChat((prevChat) => [...prevChat, data]);
     });
 
+    // Clean up on component unmount
     return () => {
       socket.off("previousMessages");
       socket.off("message");
@@ -32,12 +37,13 @@ function Chat({ roomId }) {
   }, [roomId]);
 
   const sendMessage = () => {
+    // Emit the message with the sender ID
     socket.emit("message", {
       roomId,
       text: message,
-      sender: isCurrentUser ? "user" : "other",
+      senderId:user._id, // Include senderId here
     });
-    setMessage("");
+    setMessage(""); // Clear the message input
   };
 
   return (
@@ -47,7 +53,7 @@ function Chat({ roomId }) {
           <div
             key={index}
             className={`message ${
-              msg.sender === "user" ? "my-message" : "user-message"
+              msg.senderId === user._id ? "my-message" : "user-message"
             }`}
           >
             <span>{msg.text}</span>
