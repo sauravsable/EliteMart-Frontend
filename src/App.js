@@ -114,7 +114,7 @@ function App() {
 
            <Route path='/cart' element={<Cart/>}/>
 
-           <Route path='/cart/:id' element={<CartDetails/>}/>
+           <Route path='/cart/:id' element={<ProtectedRoute element={<CartDetails/>} />}/>
 
            <Route path='/products' element={<Products/>}/>
            <Route exact path='/product/:id' element={<Product/>}/>
