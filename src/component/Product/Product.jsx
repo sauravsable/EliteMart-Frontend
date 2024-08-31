@@ -193,7 +193,7 @@ const ProductDetails = () => {
                       <IoMdClose className="close-icon" onClick={()=>{setShowOptions(false)}} />
                       <h6 style={{color:"white"}}>Select Cart</h6>
                       
-                      <button className="option-button" onClick={addToCartHandler}>My Cart</button>
+                      <button className="option-button" onClick={addToCartHandler}><TbShoppingCartShare /> My Cart</button>
                       {isAuthenticated && isAuthenticated === true && carts && carts.length > 0 ? 
                         carts.map((cart) => (
                         <button key={cart.id} className="option-button" 

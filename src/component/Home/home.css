@@ -32,6 +32,9 @@
     transition: all 0.5s;
     width: 9vmax;
     font: 500 1vmax "Roboto";
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .banner > a >button:hover{

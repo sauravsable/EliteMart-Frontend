@@ -212,6 +212,10 @@
     cursor: pointer;
     width: 100%;
     text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
   }
   
   .option-button:hover {
