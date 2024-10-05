@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect} from "react";
 import "./CartDetails.css";
 import "./cart.css";
 import CartItems from "./CartItems";
@@ -15,34 +15,15 @@ import { getAllUsers } from "../../actions/userActions";
 import Members from "../layout/Members/Members";
 import { addProductToCart } from "../../actions/cartActions";
 import Chat from "../chat/Chat";
-import axios from "axios";
-import APIURL from "../../API/Api";
-import ProductCard from "../layout/ProductCard/ProductCard";
 
 const CartDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [cameras,setCameras] = useState();
-
-  const getCameras = async()=>{
-
-    const config = { header : {"Content-Type" : "application/json"}, withCredentials : true };
-
-    const {data} = await axios.get(`${APIURL}/getCameras`,config);
-
-    setCameras(data.products);
-
-    console.log("cameras data",data);
-    
-
-  }
 
   useEffect(() => {
     dispatch(getCartDetails(id));
     dispatch(getAllUsers());
-
-    getCameras();
 
   }, [dispatch, id]);
 
@@ -177,12 +158,6 @@ const CartDetails = () => {
         </div>
       </div>
     </Fragment>
-    <>
-     <div className="cartdetailcontainer">
-        {cameras &&
-         cameras.map((product) => <ProductCard product={product} />)}
-      </div>
-    </>
     </Fragment>
   );
 };
